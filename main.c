@@ -14,19 +14,24 @@ int main(void) {
 	printf("--| MAKEMAKE: Makefile maker |--\n");
 	printf("--------------------------------\n\n");
 	
-	printf("DOTNET (C#) and JAVAC (java) are not supported!\n\n\n");
+	printf("WARNING: This will overwrite any file name \"makefile\" or the file name you choose.");
+	printf("Only GCC style compilers are supported, if your compiler doesnt support \"-o\" the same way GCC does, its not supported.\n\n\n");
 
-	printf("COMPILER : "); char *CC = getl();
+	printf("Makefile name (default: makefile) : "); char *MAKEFILE = getl();
 
-	printf("SOURCE : "); char *SRC = getl();
+	printf("Compiler of choice : "); char *CC = getl();
 
-	printf("OUTPUT : "); char *OUT = getl();
+	printf("Source file : "); char *SRC = getl();
 
-	printf("FLAGS : "); char *FLAGS = getl();
+	printf("Output filename : "); char *OUT = getl();
 
-	printf("CLEAN [y/N] : "); char CLEAN = getchar();
+	printf("Extra flags : "); char *FLAGS = getl();
 
-	FILE *makefile = fopen("makefile", "w");
+	printf("add a \"make clean\" function [y/N] : "); char CLEAN = getchar();
+
+	FILE *makefile = fopen(MAKEFILE, "w");
+
+	fprintf(makefile, "# MADE BY MakeMake\n");
 
 	fprintf(makefile, "CC = %s\n", CC);
 	fprintf(makefile, "SRC = %s\n", SRC);
@@ -35,18 +40,21 @@ int main(void) {
 
 	fprintf(makefile, "all: %s\n", OUT);
 	fprintf(makefile, "%s:\n", OUT);
-	fprintf(makefile, "    $(CC) $(FLAGS) $(SRC) -o $(OUT)");
+	fprintf(makefile, "\t$(CC) $(FLAGS) $(SRC) -o $(OUT)");
+
+	if (MAKEFILE == '\n') MAKEFILE = "makefile";
 
 	if (CLEAN == 'y' || CLEAN == 'Y') {
 		fprintf(makefile, "\n\n.PHONY: clean\n");
 		fprintf(makefile, "clean:\n");
-		fprintf(makefile, "    rm $(OUT)");
+		fprintf(makefile, "\trm $(OUT)");
 	}
 
-	printf("\"./makefile\" written. if you ");
+	printf("\"./makefile\" written. if you have any issues or can help with other compilers reach out to my discord: @kremadev");
 
 	printf(SCR_EXT);
 
+	free(MAKEFILE);
 	free(CC);
 	free(SRC);
 	free(OUT);
